@@ -38,6 +38,8 @@ Descarga e instala Postman desde [postman.com](https://www.postman.com).
 
 ## Estructura del Proyecto
 
+Se trata de un proyecto ejemplo muy sencillo de API para gestionar emails en el tan solo se han creado 3 Packages y 3 clases, que son las siguientes:
+
 ### 1. **Package `models`**:
    - **Clase `Email`**:
      - Esta clase representa un email con atributos como `id`, `remitente`, `destinatario`, `asunto`, `cuerpo` y `fecha`. Utiliza anotaciones de Lombok para reducir el código repetitivo.
