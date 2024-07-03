@@ -1,84 +1,165 @@
-# Email API
 
-Este repositorio contiene una API REST escrita en Java que gestiona una lista de emails con la siguiente estructura JSON:
+# Email API: Gestión de Correos Electrónicos con Spring Boot
+
+
+Este repositorio contiene una API REST desarrollada en Java utilizando Spring Boot para la gestión de correos electrónicos. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre una lista de correos electrónicos almacenados en una base de datos MySQL. Se incluye una guía paso a paso para la configuración y ejecución del proyecto, así como la integración y prueba con herramientas como Postman y XAMPP.
+Este repositorio contiene una API REST desarrollada en Java para gestionar una lista de correos electrónicos. Utilizaremos Postman y XAMPP para realizar las pruebas de uso.
+<p>&nbsp;</p>
+
+## Estructura JSON de los Emails
 
 ```json
+[
 {
-    "id": 1,
-    "remitente": "example1@example.com",
-    "destinatario": "example2@example.com",
-    "asunto": "Asunto del email",
-    "cuerpo": "Cuerpo del email",
-    "fecha": "2023-01-01T00:00:00Z"
+  "id": 1,
+  "remitente": "example1@example.com",
+  "destinatario": "example2@example.com",
+  "asunto": "Asunto del email",
+  "cuerpo": "Cuerpo del email",
+  "fecha": "2023-01-01T00:00:00Z"
+},
+{
+  "id": 2,
+  "remitente": "example2@example.com",
+  "destinatario": "example3@example.com",
+  "asunto": "Asunto del email 2",
+  "cuerpo": "Cuerpo del email 3",
+  "fecha": "2023-01-01T00:00:00Z"
 }
+]
 ```
+
+## Requisitos
+
+- Java 17
+- Maven
+- Spring Boot
+- MySQL
+- Postman
+- XAMPP
 
 ## Generación del Proyecto con Spring Initializr
 
-Spring Initializr es una herramienta que facilita la creación y configuración inicial de aplicaciones Spring Boot. Para generar el esqueleto del proyecto sigue los siguientes pasos:
+Para comenzar, utilizamos [Spring Initializr](https://start.spring.io) para generar la estructura inicial del proyecto. Sigue estos pasos:
 
-1. **Acceder a la Web**: Visita [start.spring.io](https://start.spring.io).
-2. **Configurar el Proyecto**:
-   - Selecciona el tipo de proyecto (Maven).
-   - Elige el lenguaje de programación (Java).
-   - Configura la versión de Spring Boot (recomendable dejar la versión por defecto).
-   - Rellena los detalles del proyecto (grupo, nombre del artefacto, versión de Java).
-3. **Añadir Dependencias**:
+1. **Accede a Spring Initializr**
+   - Visita [start.spring.io](https://start.spring.io).
+
+2. **Configura el Proyecto**
+   - **Tipo de proyecto**: Selecciona Maven.
+   - **Lenguaje**: Selecciona Java.
+   - **Versión de Spring Boot**: Deja las versiones por defecto recomendadas.
+   - **Detalles del proyecto**: Rellena el grupo, nombre del artefacto y versión de Java.
+
+3. **Añade Dependencias**
    - Añade las dependencias `Spring Web` y `Lombok`.
-4. **Generar el Proyecto**:
+
+4. **Genera el Proyecto**
    - Haz clic en "Generate" para descargar un archivo `.zip` con la estructura del proyecto.
-5. **Importar a tu IDE**:
-   - Descomprime el archivo y abre el proyecto en tu IDE favorito (por ejemplo, IntelliJ IDEA).
 
-## Instalación y Configuración de Postman
+5. **Importa el Proyecto a tu IDE**
+   - Descomprime el archivo y abre el proyecto en tu IDE favorito (IntelliJ recomendado).
 
-Postman es una herramienta que permite realizar pruebas de APIs. Para el uso que vamos a hacer en este proyecto, no es necesario crear una cuenta en Postman, podemos usar la versión lightweight API client.
+## Configuración del Proyecto
 
-Descarga e instala Postman desde [postman.com](https://www.postman.com).
+1. **Crea los Paquetes y Clases Necesarios**
+   - En el directorio `src/main/java/[nombre proyecto]`, crea los siguientes paquetes y clases:
+     - `models`: Clase `Email`.
+     - `controller`: Clase `EmailController`.
+     - `services`: Clase `EmailService`.
+     - `repository`: Interfaz `EmailRepository`.
 
-## Estructura del Proyecto
+2. **Configura la Dependencia CrudRepository**
+   - CrudRepository es una interfaz proporcionada por Spring Data JPA que ofrece métodos CRUD básicos. Incluye la dependencia en el archivo `pom.xml`.
 
-Se trata de un proyecto ejemplo muy sencillo de API para gestionar emails en el tan solo se han creado 3 Packages y 3 clases, que son las siguientes:
+3. **Configura la Conexión a la Base de Datos MySQL**
+   - Modifica el archivo `application.properties` para configurar la conexión a la base de datos:
 
-### 1. **Package `models`**:
-   - **Clase `Email`**:
-     - Esta clase representa un email con atributos como `id`, `remitente`, `destinatario`, `asunto`, `cuerpo` y `fecha`. Utiliza anotaciones de Lombok para reducir el código repetitivo.
+```properties
+spring.application.name=emailApi
+spring.datasource.url=jdbc:mysql://localhost:3306/email_db
+spring.datasource.username=root
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.show-sql=true
+```
 
-### 2. **Package `controller`**:
-   - **Clase `EmailController`**:
-     - Esta clase maneja las solicitudes HTTP. Utiliza las anotaciones de Spring para mapear las rutas y gestionar las operaciones CRUD (crear, leer, actualizar, eliminar) de los emails. Los principales métodos son:
-       - `precesarEmail`: Carga una lista de emails.
-       - `getAllEmails`: Devuelve todos los emails.
-       - `getEmailById`: Devuelve un email específico basado en su ID.
-       - `actualizarEmail`: Actualiza un email específico basado en su ID.
-       - `eliminarEmail`: Elimina un email específico basado en su ID.
+> **Nota:** Cambia los nombres de la base de datos, usuario y contraseña según tu configuración.
 
-### 3. **Package `services`**:
-   - **Clase `EmailService`**:
-     - Esta clase proporciona los métodos de negocio para gestionar la lista de emails. Actúa como un intermediario entre el controlador y los datos. Los principales métodos son:
-       - `addEmail`: Añade un nuevo email a la lista.
-       - `getAllEmails`: Devuelve la lista completa de emails.
-       - `getEmailById`: Devuelve un email basado en su ID.
-       - `actualizarEmail`: Actualiza los detalles de un email existente.
-       - `eliminarEmail`: Elimina un email basado en su ID.
+4. **Añade la Dependencia del Conector MySQL**
+   - Añade la dependencia del conector MySQL en `pom.xml` y actualiza Maven.
 
-## Pruebas de Funcionamiento
+## Ejecución de la Aplicación
 
-1. **Arrancar la Aplicación**:
-   - En IntelliJ ejecuta el comando `mvn spring-boot:run`.
-2. **Abrir Postman**.
-3. **Cargar Emails**:
-   - Selecciona `POST` y escribe `localhost:8080/cargarEmails`.
-   - Selecciona `Body`, `raw` y `JSON`.
-   - Pega la lista de emails en formato JSON y haz clic en `Send`. Debería aparecer un mensaje confirmando la carga de emails.
-4. **Listar Todos los Emails**:
-   - Selecciona `GET` y escribe `localhost:8080/emails`.
-5. **Listar un Email por ID**:
-   - Selecciona `GET` y escribe `localhost:8080/email/{id}`.
-6. **Eliminar un Email**:
-   - Selecciona `DELETE` y escribe `localhost:8080/email/{id}`.
-7. **Actualizar un Email**:
-   - Selecciona `PUT` y escribe `localhost:8080/email/{id}`.
-   - En el cuerpo, pasa el objeto email con los nuevos datos en formato JSON.
+1. **Ejecuta el Comando `spring-boot:run`**
+   - Lanza la aplicación y verifica que no se produzcan errores.
+
+## Instalación de Postman
+
+[Postman](https://www.postman.com) es una herramienta que permite realizar pruebas de APIs. Descarga e instala Postman desde su web oficial. No es necesario crear una cuenta; se puede usar la versión lightweight API client.
+
+## Pruebas de Funcionamiento con Postman
+
+1. **Arranca la Aplicación**
+   - Ejecuta `spring-boot:run` en IntelliJ.
+
+2. **Abre Postman**
+
+3. **Realiza las Siguientes Pruebas**
+
+### Crear Emails
+
+- **Método**: `POST`
+- **URL**: `localhost:8080/cargarEmails`
+- **Configuración**:
+  - Selecciona `Body`, `raw`, y en el desplegable selecciona `JSON`.
+  - En el cuerpo, pega la lista de emails en formato JSON y haz clic en `Send`.
+
+### Listar Todos los Emails
+
+- **Método**: `GET`
+- **URL**: `localhost:8080/emails`
+
+### Listar un Email por ID
+
+- **Método**: `GET`
+- **URL**: `localhost:8080/email/{id}`
+
+### Eliminar un Email
+
+- **Método**: `DELETE`
+- **URL**: `localhost:8080/email/{id}`
+
+### Actualizar un Email
+
+- **Método**: `PUT`
+- **URL**: `localhost:8080/email/{id}`
+- **Configuración**:
+  - En el cuerpo, pasa el objeto email con los datos nuevos en formato JSON.
+
+## Instalación de XAMPP
+
+[XAMPP](https://www.apachefriends.org/es/index.html) es una distribución de Apache fácil de instalar que contiene MariaDB, PHP y Perl.
+
+1. **Abre XAMPP como Administrador**
+   - Inicia el servidor de MySQL.
+
+2. **Verifica la Conexión**
+   - Abre `phpMyAdmin` y revisa si se ha creado la tabla especificada en la clase `Email`.
+
+3. **Gestión de Registros**
+   - Añade registros nuevos en la tabla a través de `cargarEmails` desde Postman y revísalos también con `phpMyAdmin`.
+
+## Contenidos del Proyecto
+
+- **Email**: Clase modelo que representa un email.
+- **EmailController**: Clase controladora que gestiona las rutas de la API.
+- **EmailRepository**: Interfaz que extiende `CrudRepository` para operaciones CRUD.
+- **EmailService**: Clase de servicio que implementa la lógica de negocio.
+- **application.properties**: Archivo de configuración de la aplicación.
+- **pom.xml**: Archivo de configuración de dependencias Maven.
+
 
 Este README proporciona la guía básica para iniciar y probar la API REST de gestión de emails. Si tienes alguna pregunta o sugerencia, no dudes en abrir una issue en el repositorio.
