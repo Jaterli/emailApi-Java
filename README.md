@@ -3,7 +3,7 @@
 
 
 Este repositorio contiene una API REST desarrollada en Java utilizando Spring Boot para la gestión de correos electrónicos. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre una lista de correos electrónicos almacenados en una base de datos MySQL. Se incluye una guía paso a paso para la configuración y ejecución del proyecto, así como la integración y prueba con herramientas como Postman y XAMPP.
-Este repositorio contiene una API REST desarrollada en Java para gestionar una lista de correos electrónicos. Utilizaremos Postman y XAMPP para realizar las pruebas de uso.
+
 <p>&nbsp;</p>
 
 ## Estructura JSON de los Emails
