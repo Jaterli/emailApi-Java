@@ -1,5 +1,5 @@
 
-# Email API: Gestión de Correos Electrónicos con Spring Boot
+# Gestión de Correos Electrónicos con Spring Boot
 
 
 Este repositorio contiene una API REST desarrollada en Java utilizando Spring Boot para la gestión de correos electrónicos. La API permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre una lista de correos electrónicos almacenados en una base de datos MySQL. Se incluye una guía paso a paso para la configuración y ejecución del proyecto, así como la integración y prueba con herramientas como Postman y XAMPP.
